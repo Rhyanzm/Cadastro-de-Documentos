@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro NR's</title>
+  <link rel="stylesheet" href="static(js-css)/css/styles.css">
+</head>
+
+<body>
+  <h1>Cadastro e Gestão de Colaboradores</h1>
+  <form id="formColaborador" onsubmit="event.preventDefault(); salvarColaborador();">
+    <label for="codigoColaborador">Código do Colaborador (6 dígitos apenas números):</label>
+    <input type="text" id="codigoColaborador" maxlength="6" pattern="\d{6}"
+      title="Digite exatamente 6 dígitos numéricos" required oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+      inputmode="numeric" autocomplete="off" />
+    <label for="nomeColaborador">Nome do Colaborador:</label>
+    <input type="text" id="nomeColaborador" required />
+    <div class="nr-group">
+      <label>NR 6 - Equipamentos de Proteção Individual</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR6" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr6_nao" onchange="handleCheck('6')">Não se aplica</label>
+        <label><input type="checkbox" id="nr6_pend" onchange="handleCheck('6')">NR pendente</label>
+      </div>
+      <div class="anexar-pdf">
+        <small></small>
+        <input type="file" id="arquivoNR6" accept="application/pdf" onchange="handleFileUpload(event, 'nr6_pdf')" />
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 10 - Segurança em Instalações e Serviços em Eletricidade</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR10" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr10_nao" onchange="handleCheck('10')">Não se aplica</label>
+        <label><input type="checkbox" id="nr10_pend" onchange="handleCheck('10')">NR pendente</label>
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR10" accept="application/pdf" onchange="handleFileUpload(event, 'nr10_pdf')" />
+
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 11 - Transporte, Movimentação, Armazenagem e Manuseio de Materiais</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR11" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr11_nao" onchange="handleCheck('11')">Não se aplica</label>
+        <label><input type="checkbox" id="nr11_pend" onchange="handleCheck('11')">NR pendente</label>
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR11" accept="application/pdf" onchange="handleFileUpload(event, 'nr11_pdf')" />
+
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 12 - Segurança no Trabalho em Máquinas e Equipamentos</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR12" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr12_nao" onchange="handleCheck('12')">Não se aplica</label>
+        <label><input type="checkbox" id="nr12_pend" onchange="handleCheck('12')">NR pendente</label>
+
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR12" accept="application/pdf" onchange="handleFileUpload(event, 'nr12_pdf')" />
+
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 18 - Condições e Meio Ambiente de Trabalho na Indústria da Construção</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR18" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr18_nao" onchange="handleCheck('18')">Não se aplica</label>
+        <label><input type="checkbox" id="nr18_pend" onchange="handleCheck('18')">NR pendente</label>
+
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR18" accept="application/pdf" onchange="handleFileUpload(event, 'nr18_pdf')" />
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 20 - Segurança e Saúde no Trabalho com Inflamáveis e Combustíveis</label>
+      <input type="date" id="dataNR20" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr20_nao" onchange="handleCheck('20')">Não se aplica</label>
+        <label><input type="checkbox" id="nr20_pend" onchange="handleCheck('20')">NR pendente</label>
+
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR20" accept="application/pdf" onchange="handleFileUpload(event, 'nr20_pdf')" />
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 33 - Segurança em Espaços Confinados</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR33" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr33_nao" onchange="handleCheck('33')">Não se aplica</label>
+        <label><input type="checkbox" id="nr33_pend" onchange="handleCheck('33')">NR pendente</label>
+
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR33" accept="application/pdf" onchange="handleFileUpload(event, 'nr33_pdf')" />
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>NR 35 - Trabalho em Altura</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataNR35" />
+      <div class="checkboxes">
+        <label><input type="checkbox" id="nr35_nao" onchange="handleCheck('35')">Não se aplica</label>
+        <label><input type="checkbox" id="nr35_pend" onchange="handleCheck('35')">NR pendente</label>
+
+      </div>
+      <div class="anexar-pdf">
+        <input type="file" id="arquivoNR35" accept="application/pdf" onchange="handleFileUpload(event, 'nr35_pdf')" />
+        <span id="nome-arquivo"></span>
+      </div>
+    </div>
+
+    <div class="nr-group">
+      <label>ASO - Atestado de Saúde Ocupacional</label>
+      <small>Data da validade</small>
+      <input type="date" id="dataASO" required />
+      <input type="file" accept="application/pdf" onchange="handleFileUpload(event, 'aso_pdf')">
+    </div>
+    <div class="anexar-pdf">
+      <span id="nome-arquivo"></span>
+    </div>
+    <button type="submit">Salvar Colaborador</button>
+  </form>
+
+  <section id="listaColaboradores">
+    <h2>Colaboradores Cadastrados</h2>
+    <label for="buscaColaborador">🔍 Buscar por código:</label>
+    <input type="text" id="buscaColaborador" placeholder="Digite o código..." oninput="filtrarTabela()" />
+    <table>
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nome</th> <!-- ADICIONADO -->
+          <th>NR 6</th>
+          <th>NR 10</th>
+          <th>NR 11</th>
+          <th>NR 12</th>
+          <th>NR 18</th>
+          <th>NR 20</th>
+          <th>NR 33</th>
+          <th>NR 35</th>
+          <th>ASO</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaColaboradoresBody"></tbody>
+    </table>
+  </section>
+
+  <a href="index.html" id="voltarLink">⬅ Voltar para Login</a>
+
+  <script>
+    function handleCheck(nr) {
+      const naoSeAplica = document.getElementById(`nr${nr}_nao`);
+      const pendente = document.getElementById(`nr${nr}_pend`);
+      const dataInput = document.getElementById(`dataNR${nr}`);
+
+      if (naoSeAplica.checked) {
+        pendente.checked = false;
+        dataInput.value = '';
+        dataInput.disabled = true;
+      } else if (pendente.checked) {
+        naoSeAplica.checked = false;
+        dataInput.value = '';
+        dataInput.disabled = true;
+      } else {
+        dataInput.disabled = false;
+      }
+    }
+
+    function carregarColaboradores() {
+      const dados = localStorage.getItem('colaboradores');
+      return dados ? JSON.parse(dados) : {};
+    }
+
+    function salvarColaboradores(obj) {
+      localStorage.setItem('colaboradores', JSON.stringify(obj));
+    }
+
+    function carregarTabela() {
+      const colaboradores = carregarColaboradores();
+      const tbody = document.getElementById('tabelaColaboradoresBody');
+      tbody.innerHTML = '';
+
+      for (const codigo in colaboradores) {
+        const c = colaboradores[codigo];
+
+        function mostrarValor(data, naoSeAplica, pendente, pdf) {
+          if (naoSeAplica) return 'Não se aplica';
+          if (pendente) return 'NR Pendente';
+          let texto = data ? data : '-';
+          if (pdf) {
+            texto += ` <button onclick="verPDF('${codigo}', '${pdf}')">📄 Ver PDF</button>`;
+          }
+          return texto;
+        }
+
+        tbody.insertAdjacentHTML('beforeend', `
+      <tr>
+        <td>${codigo}</td>
+        <td>${c.nome || '-'}</td>
+        <td>${mostrarValor(c.nr6_data, c.nr6_nao, c.nr6_pend, 'nr6_pdf')}</td>
+        <td>${mostrarValor(c.nr10_data, c.nr10_nao, c.nr10_pend, 'nr10_pdf')}</td>
+        <td>${mostrarValor(c.nr11_data, c.nr11_nao, c.nr11_pend, 'nr11_pdf')}</td>
+        <td>${mostrarValor(c.nr12_data, c.nr12_nao, c.nr12_pend, 'nr12_pdf')}</td>
+        <td>${mostrarValor(c.nr18_data, c.nr18_nao, c.nr18_pend, 'nr18_pdf')}</td>
+        <td>${mostrarValor(c.nr20_data, c.nr20_nao, c.nr20_pend, 'nr20_pdf')}</td>
+        <td>${mostrarValor(c.nr33_data, c.nr33_nao, c.nr33_pend, 'nr33_pdf')}</td>
+        <td>${mostrarValor(c.nr35_data, c.nr35_nao, c.nr35_pend, 'nr35_pdf')}</td>
+        <td>
+          ${c.aso_data || '-'}
+          ${c.aso_pdf ? `<button onclick="verPDF('${codigo}', 'aso_pdf')">📄 Ver PDF</button>` : ''}
+        </td>
+        <td class="acoes">
+          <button title="Editar" onclick="editarColaborador('${codigo}')">✏️</button>
+          <button title="Excluir" onclick="excluirColaborador('${codigo}')">🗑️</button>
+        </td>
+      </tr>
+    `);
+      }
+    }
+
+    function salvarColaborador() {
+      const codigo = document.getElementById('codigoColaborador').value.trim();
+      const nome = document.getElementById('nomeColaborador').value.trim();
+
+      if (!/^\d{6}$/.test(codigo)) {
+        alert('Código deve ter exatamente 6 dígitos numéricos!');
+        return;
+      }
+      if (!nome) {
+        alert('Informe o nome do colaborador.');
+        return;
+      }
+
+      function lerGrupo(nr) {
+        const data = document.getElementById(`dataNR${nr}`).value;
+        const naoSeAplica = document.getElementById(`nr${nr}_nao`).checked;
+        const pendente = document.getElementById(`nr${nr}_pend`).checked;
+        return { data, naoSeAplica, pendente };
+      }
+
+      const nr6 = lerGrupo('6');
+      const nr10 = lerGrupo('10');
+      const nr11 = lerGrupo('11');
+      const nr12 = lerGrupo('12');
+      const nr18 = lerGrupo('18');
+      const nr20 = lerGrupo('20');
+      const nr33 = lerGrupo('33');
+      const nr35 = lerGrupo('35');
+
+      const aso_data = document.getElementById('dataASO').value;
+      if (!aso_data) {
+        alert('Informe a data do ASO.');
+        return;
+      }
+
+      const colaboradores = carregarColaboradores();
+      colaboradores[codigo] = {
+        nome,
+        nr6_data: nr6.data,
+        nr6_nao: nr6.naoSeAplica,
+        nr6_pend: nr6.pendente,
+        nr10_data: nr10.data,
+        nr10_nao: nr10.naoSeAplica,
+        nr10_pend: nr10.pendente,
+        nr11_data: nr11.data,
+        nr11_nao: nr11.naoSeAplica,
+        nr11_pend: nr11.pendente,
+        nr12_data: nr12.data,
+        nr12_nao: nr12.naoSeAplica,
+        nr12_pend: nr12.pendente,
+        nr18_data: nr18.data,
+        nr18_nao: nr18.naoSeAplica,
+        nr18_pend: nr18.pendente,
+        nr20_data: nr20.data,
+        nr20_nao: nr20.naoSeAplica,
+        nr20_pend: nr20.pendente,
+        nr33_data: nr33.data,
+        nr33_nao: nr33.naoSeAplica,
+        nr33_pend: nr33.pendente,
+        nr35_data: nr35.data,
+        nr35_nao: nr35.naoSeAplica,
+        nr35_pend: nr35.pendente,
+        aso_data,
+        ...arquivosPDF
+      };
+
+      salvarColaboradores(colaboradores);
+      alert('Colaborador salvo com sucesso!');
+      limparFormulario();
+      carregarTabela();
+    }
+
+    function limparFormulario() {
+      document.getElementById('formColaborador').reset();
+      // Re-habilita inputs
+      ['6', '10', '11', '12', '18', '20', '33', '35'].forEach(nr => {
+        document.getElementById(`dataNR${nr}`).disabled = false;
+      });
+    }
+
+    function editarColaborador(codigo) {
+      const colaboradores = carregarColaboradores();
+      if (!colaboradores[codigo]) {
+        alert('Colaborador não encontrado para editar.');
+        return;
+      }
+
+      const c = colaboradores[codigo];
+      document.getElementById('codigoColaborador').value = codigo;
+      document.getElementById('nomeColaborador').value = c.nome || ''; // <-- ADICIONADO
+
+      function setGrupo(nr, data, naoSeAplica, pendente) {
+        document.getElementById(`dataNR${nr}`).value = data || '';
+        document.getElementById(`nr${nr}_nao`).checked = naoSeAplica || false;
+        document.getElementById(`nr${nr}_pend`).checked = pendente || false;
+
+        const inputData = document.getElementById(`dataNR${nr}`);
+        inputData.disabled = naoSeAplica || pendente;
+      }
+
+      setGrupo('6', c.nr6_data, c.nr6_nao, c.nr6_pend);
+      setGrupo('10', c.nr10_data, c.nr10_nao, c.nr10_pend);
+      setGrupo('11', c.nr11_data, c.nr11_nao, c.nr11_pend);
+      setGrupo('12', c.nr12_data, c.nr12_nao, c.nr12_pend);
+      setGrupo('18', c.nr18_data, c.nr18_nao, c.nr18_pend);
+      setGrupo('20', c.nr20_data, c.nr20_nao, c.nr20_pend);
+      setGrupo('33', c.nr33_data, c.nr33_nao, c.nr33_pend);
+      setGrupo('35', c.nr35_data, c.nr35_nao, c.nr35_pend);
+
+      document.getElementById('dataASO').value = c.aso_data || '';
+      arquivosPDF = {
+        nr6_pdf: c.nr6_pdf || null,
+        nr10_pdf: c.nr10_pdf || null,
+        nr11_pdf: c.nr11_pdf || null,
+        nr12_pdf: c.nr12_pdf || null,
+        nr18_pdf: c.nr18_pdf || null,
+        nr20_pdf: c.nr20_pdf || null,
+        nr33_pdf: c.nr33_pdf || null,
+        nr35_pdf: c.nr35_pdf || null,
+        aso_pdf: c.aso_pdf || null
+      };
+    }
+
+    function excluirColaborador(codigo) {
+      if (!confirm(`Confirma exclusão do colaborador código ${codigo}?`)) return;
+      const colaboradores = carregarColaboradores();
+      delete colaboradores[codigo];
+      salvarColaboradores(colaboradores);
+      carregarTabela();
+      alert('Colaborador excluído.');
+    }
+
+    window.onload = () => {
+      carregarTabela();
+    };
+    let arquivosPDF = {};
+
+    function handleFileUpload(event, campo) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        arquivosPDF[campo] = e.target.result; // base64 do PDF
+      };
+      reader.readAsDataURL(file);
+    }
+    function verPDF(codigo, campo) {
+      const colaboradores = carregarColaboradores();
+      const colaborador = colaboradores[codigo];
+      const base64 = colaborador[campo];
+      if (!base64) {
+        alert('PDF não encontrado.');
+        return;
+      }
+      const win = window.open();
+      win.document.write(`<iframe width='100%' height='100%' src='${base64}'></iframe>`);
+    }
+    function filtrarTabela() {
+      const termo = document.getElementById('buscaColaborador').value.trim().toLowerCase();
+      const linhas = document.querySelectorAll('#tabelaColaboradoresBody tr');
+
+      linhas.forEach(linha => {
+        const texto = linha.textContent.toLowerCase();
+        linha.style.display = texto.includes(termo) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+
+</html>
