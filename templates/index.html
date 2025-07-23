@@ -1,1 +1,187 @@
 
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registro NR's</title>
+    <link rel="stylesheet" href="static(js-css)/css/styles.css">
+    <link rel="icon" href="img/icon.png" type="image/png">
+
+</head>
+
+<body>
+    <div class="container">
+        <img src="img/logoadler.png" alt="Logo da Empresa" class="logo" />
+        <h1>Consulta de Colaboradores</h1>
+        <input id="codigoColaborador" type="text" maxlength="6" placeholder="Código do Colaborador (6 dígitos)" />
+        <button onclick="consultarColaborador()">Consultar</button>
+        <div id="resultado"></div>
+        <a id="linkAdmin" onclick="mostrarModal()">Área do Gestor (Cadastrar/Editar Colaboradores)</a>
+    </div>
+
+    <!-- Adm Login -->
+    <div id="modalLogin" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+        <div class="modal-content">
+            <span class="modal-close" onclick="fecharModal()" aria-label="Fechar">&times;</span>
+            <h2 id="modalTitle">Login - Área do Gestor</h2>
+            <input id="modalUsuario" type="text" placeholder="Usuário" aria-label="Usuário" autofocus />
+            <input id="modalSenha" type="password" placeholder="Senha" aria-label="Senha" />
+            <button onclick="login()">Entrar</button>
+            <div id="errorLogin" class="error-msg" role="alert" aria-live="assertive"></div>
+        </div>
+    </div>
+
+    <script>
+        function mostrarModal() {
+            const modal = document.getElementById('modalLogin');
+            document.getElementById('errorLogin').textContent = '';
+            document.getElementById('modalUsuario').value = '';
+            document.getElementById('modalSenha').value = '';
+            modal.style.display = 'flex';
+            modal.setAttribute('aria-hidden', 'false');
+            document.getElementById('modalUsuario').focus();
+        }
+        function fecharModal() {
+            const modal = document.getElementById('modalLogin');
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden', 'true');
+            document.getElementById('codigoColaborador').focus();
+        }
+
+        window.onclick = function (event) {
+            const modal = document.getElementById('modalLogin');
+            if (event.target === modal) {
+                fecharModal();
+            }
+        };
+        function login() {
+            const usuario = document.getElementById('modalUsuario').value.trim();
+            const senha = document.getElementById('modalSenha').value;
+            const errorMsg = document.getElementById('errorLogin');
+
+            if (usuario === 'Admin' && senha === 'Adler2025') {
+                window.location.href = 'admin.html';
+            } else {
+                errorMsg.textContent = 'Usuário ou senha inválidos!';
+            }
+        }
+
+        function carregarColaboradores() {
+            const dados = localStorage.getItem('colaboradores');
+            if (dados) return JSON.parse(dados);
+            return {};
+        }
+
+        function formatarData(dataStr) {
+            if (!dataStr) return 'Sem data';
+            const data = new Date(dataStr);
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
+            const ano = data.getFullYear();
+            return `${dia}/${mes}/${ano}`;
+        }
+
+        function calcularValidadeComDias(dataStr) {
+            if (!dataStr) {
+                return {
+                    statusHTML: '<span class="status-fora">Sem data cadastrada</span>',
+                    avisoDias: ''
+
+                };
+            }
+            const data = new Date(dataStr);
+            const hoje = new Date();
+            const umAnoMs = 365 * 24 * 60 * 60 * 1000;
+            const diffMs = hoje - data;
+
+            if (diffMs > umAnoMs) {
+                return {
+                    statusHTML: '<span class="status-fora">Fora de validade</span>',
+                    avisoDias: ''
+                };
+            } else {
+                const vencimento = new Date(data.getTime() + umAnoMs);
+                const diffDias = Math.ceil((vencimento - hoje) / (1000 * 60 * 60 * 24));
+                let aviso = '';
+                if (diffDias <= 15 && diffDias >= 0) {
+                    aviso = `<span class="avisos">Faltam ${diffDias} dia${diffDias > 1 ? 's' : ''} para vencer</span>`;
+                }
+                return {
+                    statusHTML: '<span class="status-valido">Válido</span>',
+                    avisoDias: aviso
+                };
+            }
+        }
+
+        function consultarColaborador() {
+            const codigo = document.getElementById('codigoColaborador').value.trim();
+            const resultado = document.getElementById('resultado');
+
+            if (codigo.length !== 6) {
+                resultado.innerHTML = '<p style="color:red;">Informe um código de 6 dígitos!</p>';
+                return;
+            }
+
+            const colaboradores = carregarColaboradores();
+
+            if (!colaboradores[codigo]) {
+                resultado.innerHTML = '<p style="color:red;">Colaborador não encontrado.</p>';
+                return;
+            }
+
+            const colab = colaboradores[codigo];
+            let html = `<h2>Informações do Colaborador ${codigo}</h2><div class="info-colaborador">`;
+
+            const nrs = ['6', '10', '11', '12', '18', '20', '33', '35'];
+            nrs.forEach(nr => {
+                const data = colab[`nr${nr}_data`] || '';
+                const naoSeAplica = colab[`nr${nr}_nao`] || false;
+                const pendente = colab[`nr${nr}_pend`] || false;
+                let statusHtml = '';
+                let avisoDias = '';
+
+                if (naoSeAplica) {
+                    statusHtml = '<span class="status-fora">Não se aplica</span>';
+                } else if (pendente) {
+                    statusHtml = '<span class="status-fora">NR Pendente</span>';
+                } else {
+                    const calc = calcularValidadeComDias(data);
+                    statusHtml = calc.statusHTML;
+                    avisoDias = calc.avisoDias;
+                }
+
+                const pdfLink = colab[`nr${nr}_pdf`]
+                    ? `<a href="${colab[`nr${nr}_pdf`]}" target="_blank" style="margin-left: 10px;">📄 Ver PDF</a>`
+                    : '';
+
+                html += `<p>NR ${nr}: ${statusHtml} <span class="data-registro">(Registrado em ${formatarData(data)})</span> ${avisoDias} ${pdfLink}</p>`;
+            });
+
+            html += '</div>'; // fechamento da div geral das NRs
+
+            // ASO
+            const asoData = colab.aso_data || '';
+            let asoStatusHtml = '';
+            let asoAvisoDias = '';
+            if (!asoData) {
+                asoStatusHtml = '<span class="status-fora">Sem data cadastrada</span>';
+            } else {
+                const asoCalc = calcularValidadeComDias(asoData);
+                asoStatusHtml = asoCalc.statusHTML;
+                asoAvisoDias = asoCalc.avisoDias;
+            }
+            const asoPdfLink = colab["aso_pdf"]
+                ? `<a href="${colab["aso_pdf"]}" target="_blank" style="margin-left: 10px;">📄 Ver PDF</a>`
+                : '';
+            html += `<p>ASO: ${asoStatusHtml} <span class="data-registro">(Registrado em ${formatarData(asoData)})</span> ${asoAvisoDias} ${asoPdfLink}</p>`;
+
+            resultado.innerHTML = html;
+        }
+
+    </script>
+</body>
+
+</html>
+
