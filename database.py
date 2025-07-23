@@ -4,10 +4,10 @@ from psycopg2.extras import RealDictCursor
 
 def get_connection():
     return psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASS"),
+        host=os.getenv("dpg-d1vto4fdiees73c1j9qg-a"),
+        database=os.getenv("meu_banco_colaboradores"),
+        user=os.getenv("admin"),
+        password=os.getenv("VhEMv8vC5zPW7HCuFc7waY8YGMAN60hn"),
         port=os.getenv("DB_PORT", 5432)
     )
 
