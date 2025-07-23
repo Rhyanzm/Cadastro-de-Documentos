@@ -170,3 +170,79 @@ def delete_colaborador(id):
 
 if __name__ == '__main__':
     app.run(debug=True) # debug=True para desenvolvimento (reinicia o servidor em mudanças)
+
+    import psycopg2
+
+conn = psycopg2.connect(
+    host="dpg-d1vto4fdiees73c1j9qg-a",
+    database="colaboradores",
+    user="admin",
+    password="VhEMv8vC5zPW7HCuFc7waY8YGMAN60hn",
+    port="5432"
+)
+cursor = conn.cursor()
+from flask import Flask, request, jsonify, render_template
+import psycopg2
+import os
+
+app = Flask(__name__)
+
+# Dados do Render (pegue da aba "DATABASE" na sua conta Render)
+DB_HOST = 'dpg-d1vto4fdiees73c1j9qg-a'
+DB_NAME = 'meu_banco_colaboradores'
+DB_USER = 'admin'
+DB_PASS = 'VhEMv8vC5zPW7HCuFc7waY8YGMAN60hn'
+DB_PORT = '5432'
+
+def conectar():
+    return psycopg2.connect(
+        host=DB_HOST,
+        database=DB_NAME,
+        user=DB_USER,
+        password=DB_PASS,
+        port=DB_PORT
+    )
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/cadastrar', methods=['POST'])
+def cadastrar():
+    dados = request.json
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO colaboradores (
+                nome, codigo_registro,
+                nr6_aplicavel, nr6_validade,
+                nr10_aplicavel, nr10_validade
+            ) VALUES (%s, %s, %s, %s, %s, %s)
+        """, (
+            dados['nome'], dados['codigo_registro'],
+            dados['nr6_aplicavel'], dados['nr6_validade'],
+            dados['nr10_aplicavel'], dados['nr10_validade']
+        ))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return jsonify({'mensagem': 'Colaborador cadastrado com sucesso!'})
+    except Exception as e:
+        return jsonify({'erro': str(e)})
+
+@app.route('/listar')
+def listar():
+    try:
+        conn = conectar()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM colaboradores")
+        resultado = cur.fetchall()
+        cur.close()
+        conn.close()
+        return jsonify(resultado)
+    except Exception as e:
+        return jsonify({'erro': str(e)})
+
+if __name__ == '__main__':
+    app.run(debug=True)
