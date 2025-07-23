@@ -6,6 +6,13 @@ from functools import wraps
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from database import get_connection  # usar sua função correta
+from flask import Flask, render_template
+
+app = Flask(__name__)  # NÃO precisa de template_folder se usar a pasta padrão 'templates'
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'troque_essa_chave')
