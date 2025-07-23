@@ -1,5 +1,3 @@
-Start Command: gunicorn app:app
-Build Command: pip install -r requirements.txt
 services:
   - type: web
     name: meu-site-flask
