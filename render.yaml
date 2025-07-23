@@ -1,13 +1,19 @@
 services:
   - type: web
-    name: meu-site-flask
-    runtime: python
+    name: cadastro-colaboradores
+    env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn app:app"
     plan: free
     branch: main
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: meu-banco-render
-          property: connectionString
+      - key: DB_HOST
+        value: <host-do-seu-postgres>
+      - key: DB_NAME
+        value: <nome-do-banco>
+      - key: DB_USER
+        value: <usuario>
+      - key: DB_PASS
+        value: <senha>
+      - key: SECRET_KEY
+        value: uma-chave-secreta
